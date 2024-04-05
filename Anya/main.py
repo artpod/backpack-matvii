@@ -7,7 +7,7 @@ from time import sleep
 from random import randint
 
 # Завантаження твого приватного ключа
-private_key = Ed25519PrivateKey.from_private_bytes(base64.b64decode("LuZ7sDM/IKLnDSuBoUwnE2/COQTtZ84w0IhsCfRX0jI="))
+private_key = Ed25519PrivateKey.from_private_bytes(base64.b64decode("erABCVG8u26LVMSQtL8/+hYcGZp6Ki11dy9uq4ZDS9M="))
 
 # Генерація заголовків для запиту
 def generate_headers(body_str):
@@ -20,7 +20,7 @@ def generate_headers(body_str):
 
     # Повернення заголовків
     return {
-        "X-API-KEY": "Nh3cIkvbOKkDcUGGt0pcbdhEHf1gzfAR+UTF+dFN24s=",
+        "X-API-KEY": "fhVa28P5n0mLPAjztwiDXHPZdKaosY16XfMC4c92YI8=",
         "X-SIGNATURE": base64.b64encode(signature).decode(),
         "X-TIMESTAMP": str(timestamp),
         "X-WINDOW": str(window),
@@ -101,18 +101,18 @@ while True:
 
         print("Bought "+quantity+" "+symbol+" "+status)
 
-        spi = randint(1, 5)
+        spi = randint(2, 15)
         print(f"Спимо {spi} секунд...")
-        sleep(1)
+        sleep(spi)
 
     
 
         response_data = make_sell_request(sell_price, quantity, symbol)
         print("Sold "+ quantity+" "+symbol+" "+status)
 
-        spi = randint(1, 5)
+        spi = randint(2, 15)
         print(f"Спимо {spi} секунд...")
-        sleep(1)
+        sleep(spi)
 
         print("Ітерація номер "+str(current_iteration))
         print(" ")
