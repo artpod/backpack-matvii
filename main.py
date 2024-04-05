@@ -4,6 +4,7 @@ import base64
 import time
 import requests
 from time import sleep
+from random import randint
 
 # Завантаження твого приватного ключа
 private_key = Ed25519PrivateKey.from_private_bytes(base64.b64decode("LuZ7sDM/IKLnDSuBoUwnE2/COQTtZ84w0IhsCfRX0jI="))
@@ -26,13 +27,13 @@ def generate_headers(body_str):
     }
 
 
-def make_buy_request():
+def make_buy_request(price, quantity, symbol):
     body = {
         "orderType": "Limit",
-        "price": "2",
-        "quantity": 20,
+        "price": price,
+        "quantity": quantity,
         "side": "Bid",
-        "symbol": "JUP_USDC"
+        "symbol": symbol
     }
     body_str = "instruction=orderExecute&" + "&".join(f"{k}={v}" for k, v in body.items())
     #print (body_str)
@@ -49,13 +50,13 @@ def make_buy_request():
         print("Відповідь сервера:", response.text)
         return None
 
-def make_sell_request():
+def make_sell_request(price, quantity, symbol):
     body = {
         "orderType": "Limit",
-        "price": "1",
-        "quantity": 19.97,
+        "price": price,
+        "quantity": quantity,
         "side": "Ask",
-        "symbol": "JUP_USDC"
+        "symbol": symbol
     }
     body_str = "instruction=orderExecute&" + "&".join(f"{k}={v}" for k, v in body.items())
     #print (body_str)
@@ -77,22 +78,47 @@ def make_sell_request():
 print("Початок роботи")
 
 while True:
-    response_data=make_buy_request()
+    buy_price = input("Введіть ціну для покупки: ")
+    sell_price = input("Введіть ціну для продажу: ")
+    quantity = input("Введіть кількість для покупки: ")
+    symbol = input("Введіть символ для покупки: ")
 
-    quantity=response_data.get('quantity')
-    symbol=response_data.get('symbol')
-    status=response_data.get('status')
+    # Вказуємо кількість ітерацій
+    iterations = int(input("Введіть кількість ітерацій: "))
 
-    print("Bought "+quantity+" "+symbol+" "+status)
+    # Ініціалізуємо лічильник
+    current_iteration = 0
 
-    sleep(1)
+    sum = 0.0
+
+    # Виконуємо цикл while до тих пір, поки лічильник менший за кількість ітерацій
+    while current_iteration < iterations:
+        response_data = make_buy_request(buy_price, quantity, symbol)
+
+        quantity=response_data.get('quantity')
+        symbol=response_data.get('symbol')
+        status=response_data.get('status')
+
+        print("Bought "+quantity+" "+symbol+" "+status)
+
+        spi = randint(1, 5)
+        print(f"Спимо {spi} секунд...")
+        sleep(1)
 
     
 
-    make_sell_request()
-    print("Sold "+ quantity+" "+symbol+" "+status)
+        response_data = make_sell_request(sell_price, quantity, symbol)
+        print("Sold "+ quantity+" "+symbol+" "+status)
 
-    sleep(4)
+        spi = randint(1, 5)
+        print(f"Спимо {spi} секунд...")
+        sleep(1)
 
+        print("Ітерація номер "+str(current_iteration))
+        print(" ")
 
+        current_iteration += 1
+        sum += float(quantity)*2
+
+    print ("Прокручено "+str(sum)+" "+str(symbol))
 
